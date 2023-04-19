@@ -14,6 +14,9 @@ class ToDoListViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let items = UserDefaults.standard.array(forKey: "ToDoItemsKey") as? [String] {
+            toDoItems = items
+        }
         
     }
 
@@ -50,6 +53,7 @@ class ToDoListViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add", style: .default) { (alertAction) in
             self.toDoItems.append(textField.text!)
+            UserDefaults.standard.set(self.toDoItems, forKey: "ToDoItemsKey")
             self.tableView.reloadData()
         }
         
