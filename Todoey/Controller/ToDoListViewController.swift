@@ -10,14 +10,22 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
     
-    var toDoItems = ["1", "2", "3"]
+    var toDoItems = [Item]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let items = UserDefaults.standard.array(forKey: "ToDoItemsKey") as? [String] {
-            toDoItems = items
-        }
         
+        let newItem = Item()
+        newItem.title = "1"
+        toDoItems.append(newItem)
+        
+        let newItem2 = Item()
+        newItem2.title = "2"
+        toDoItems.append(newItem2)
+        
+        let newItem3 = Item()
+        newItem3.title = "1"
+        toDoItems.append(newItem3)
     }
 
     //MARK: TableView DataSource Methods
@@ -29,7 +37,7 @@ class ToDoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath)
         
-        cell.textLabel?.text = toDoItems[indexPath.row]
+        cell.textLabel?.text = toDoItems[indexPath.row].title
         
         return cell
     }
@@ -52,7 +60,10 @@ class ToDoListViewController: UITableViewController {
         let alert = UIAlertController(title: "Add new item", message: "", preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Add", style: .default) { (alertAction) in
-            self.toDoItems.append(textField.text!)
+            let newItem = Item()
+            newItem.title = textField.text!
+            self.toDoItems.append(newItem)
+            
             UserDefaults.standard.set(self.toDoItems, forKey: "ToDoItemsKey")
             self.tableView.reloadData()
         }
