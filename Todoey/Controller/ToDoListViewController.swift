@@ -7,10 +7,12 @@
 //
 
 import UIKit
+import CoreData
 
 class ToDoListViewController: UITableViewController {
     
     var toDoItems = [Item]()
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
 
     override func viewDidLoad() {
@@ -20,7 +22,7 @@ class ToDoListViewController: UITableViewController {
             toDoItems = items
         }
         
-        loadItems()
+//        loadItems()
     }
 
     //MARK: TableView DataSource Methods
@@ -57,8 +59,9 @@ class ToDoListViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add", style: .default) { (alertAction) in
             
-            let newItem = Item()
+            let newItem = Item(context: self.context)
             newItem.title = textField.text!
+            newItem.done = false
             
             self.toDoItems.append(newItem)
             
@@ -76,26 +79,24 @@ class ToDoListViewController: UITableViewController {
     }
     
     func saveItems() {
-        let encoder = PropertyListEncoder()
         do {
-            let data = try encoder.encode(self.toDoItems)
-            try data.write(to: self.dataFilePath!)
+            try context.save()
         } catch {
-            print("Error encoding item array, \(error)")
+            print("Error saving item, \(error)")
         }
         
         self.tableView.reloadData()
     }
     
-    func loadItems() {
-        if let data = try? Data(contentsOf: dataFilePath!) {
-            let decoder = PropertyListDecoder()
-            do {
-                toDoItems = try decoder.decode([Item].self, from: data)
-            } catch {
-                print("Error encoding item array, \(error)")
-            }
-        }
-    }
+//    func loadItems() {
+//        if let data = try? Data(contentsOf: dataFilePath!) {
+//            let decoder = PropertyListDecoder()
+//            do {
+//                toDoItems = try decoder.decode([Item].self, from: data)
+//            } catch {
+//                print("Error encoding item array, \(error)")
+//            }
+//        }
+//    }
 }
 
