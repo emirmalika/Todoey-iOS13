@@ -22,7 +22,7 @@ class ToDoListViewController: UITableViewController {
             toDoItems = items
         }
         
-//        loadItems()
+        loadItems()
     }
 
     //MARK: TableView DataSource Methods
@@ -88,15 +88,13 @@ class ToDoListViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-//    func loadItems() {
-//        if let data = try? Data(contentsOf: dataFilePath!) {
-//            let decoder = PropertyListDecoder()
-//            do {
-//                toDoItems = try decoder.decode([Item].self, from: data)
-//            } catch {
-//                print("Error encoding item array, \(error)")
-//            }
-//        }
-//    }
+    func loadItems() {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        do {
+            toDoItems = try context.fetch(request)
+        } catch {
+            print("Error is \(error)")
+        }
+    }
 }
 
